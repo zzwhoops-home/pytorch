@@ -16,3 +16,13 @@ print(f"Ones Tensor: \n {x_ones} \n")
 
 x_rand = torch.rand_like(x_data, dtype=torch.double) # overrides the datatype of x_data
 print(f"Random Tensor: \n {x_rand} \n")
+
+# just generates data (comma is stylistic choice, maybe easier to add elements)
+shape = (2, 3,)
+rand_tensor = torch.rand(shape)
+ones_tensor = torch.ones(shape) # by default, initializes as float32
+zeros_tensor = torch.zeros(shape)
+
+print(f"Random Tensor: \n {rand_tensor} \n")
+print(f"Ones Tensor: \n {ones_tensor} \n")
+print(f"Zeros Tensor: \n {zeros_tensor}")
