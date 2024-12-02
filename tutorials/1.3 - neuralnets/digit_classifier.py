@@ -61,3 +61,67 @@ class Net(nn.Module):
 
 net = Net()
 print(net)
+
+# get neural net parameters
+params = list(net.parameters())
+print(len(params))
+print(params[0].size())  # conv1's .weight
+
+# random input
+input = torch.randn(1, 1, 32, 32)
+out = net(input)
+print(out)
+
+# zero gradients, define random values for params
+net.zero_grad()
+out.backward(torch.randn(1, 10))
+
+# loss function
+output = net(input)
+target = torch.randn(10)    # a dummy target, for example
+# this says we want to take the length 10 tensor, modify tensor so we have
+# 1 row, and then the -1 is a placeholder that says "fill out the rows as needed"
+target = target.view(1, -1) # make it the same shape as output
+criterion = nn.MSELoss()
+
+loss = criterion(output, target)
+print(loss)
+
+print("\n")
+
+# see layers of NN
+print(loss.grad_fn)  # MSELoss
+print(loss.grad_fn.next_functions[0][0])  # Linear
+print(loss.grad_fn.next_functions[0][0].next_functions[0][0])  # ReLU
+
+print("\n")
+# backprop
+net.zero_grad()     # zeroes the gradient buffers of all parameters
+
+print('conv1.bias.grad before backward')
+print(net.conv1.bias.grad)
+
+loss.backward()
+
+print('conv1.bias.grad after backward')
+print(net.conv1.bias.grad)
+
+# stochastic gradient descent (SGD)
+# weight = weight - learning_rate * gradient
+learning_rate = 0.01
+for f in net.parameters():
+    f.data.sub_(f.grad.data * learning_rate)
+
+"""
+import torch.optim as optim
+
+# create your optimizer
+optimizer = optim.SGD(net.parameters(), lr=0.01)
+
+# in your training loop:
+optimizer.zero_grad()   # zero the gradient buffers
+output = net(input)
+loss = criterion(output, target)
+loss.backward()
+optimizer.step()    # Does the update
+"""
