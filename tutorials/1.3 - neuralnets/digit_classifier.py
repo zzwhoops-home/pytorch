@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import torch.optim as optim
 
 # A typical training procedure for a neural network is as follows:
 """
@@ -112,8 +113,6 @@ learning_rate = 0.01
 for f in net.parameters():
     f.data.sub_(f.grad.data * learning_rate)
 
-"""
-import torch.optim as optim
 
 # create your optimizer
 optimizer = optim.SGD(net.parameters(), lr=0.01)
@@ -124,4 +123,3 @@ output = net(input)
 loss = criterion(output, target)
 loss.backward()
 optimizer.step()    # Does the update
-"""
